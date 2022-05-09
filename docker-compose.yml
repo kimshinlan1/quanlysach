@@ -1,0 +1,53 @@
+version: "3"
+
+services:
+    # PHP + Apache
+    web:
+        container_name: my_laravel_app
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - 80:80
+        privileged: true
+        volumes:
+            - .:/var/www/html:delegated
+            - web_vendor:/var/www/html/vendor
+            - web_storage_app:/var/www/html/storage/app
+            - web_storage_framework:/var/www/html/storage/framework
+            - web_storage_debugbar:/var/www/html/storage/debugbar
+            - web_node_modules:/var/www/html/node_modules
+
+    # mySQL
+    db:
+        container_name: mysql_db
+        image: mysql:latest
+        environment:
+            MYSQL_ROOT_PASSWORD: secret
+            MYSQL_DATABASE: my_app_db
+            MYSQL_USER: duong
+            MYSQL_PASSWORD: secret
+        volumes:
+            - db_data:/var/lib/mysql
+        ports:
+            - "6033:3306"
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: pma
+        links:
+            - db
+        environment:
+            PMA_HOST: mysql_host
+            PMA_PORT: 3306
+            PMA_ARBITRARY: 1
+            restart: always
+        ports:
+            - 8081:80
+            
+volumes:
+    db_data:
+    web_node_modules:
+    web_storage_app:
+    web_storage_framework:
+    web_storage_debugbar:
+    web_vendor:
