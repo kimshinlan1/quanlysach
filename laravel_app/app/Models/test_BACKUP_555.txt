@@ -1,3 +1,6 @@
+<<<<<<< HEAD
 This file is used to test branching in git
 Changed on main
+=======
 Changed on new-branch
+>>>>>>> new-branch
