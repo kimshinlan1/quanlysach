@@ -38,45 +38,47 @@
             <h2>List of Devices</h2>
         </div>
         <div>
-            <table class="table table-bordered">
-                <thead>
-                    <tr class="table-secondary">
-                        <th data-width="100" scope="col">Device Name</th>
-                        <th data-width="800" scope="col">Brand</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($devices as $device)
-                    <tr class="table-secondary">
-                        <td data-width="100">{{ $device->name }}</td>
-                        <td data-width="800">{{ $device->brand->name }}</td>
-                        <td>
-                            <!-- <form action="/editDevice" method="get">
-                                <input type="hidden" value={{ $device->id }} name="id">
-                                <input type="hidden" value={{ $device->brand->name }} name="brandName">
-                                <button class="btn btn-primary me-1">Edit</button>
-                            </form> -->
-                            <button type="button" class="btn btn-primary myEdit"
-                             data-options='{"id":"{{$device->id}}","brandName":"{{$device->brand->name}}","deviceName":"{{$device->name}}"}'>
-                                Edit
-                            </button>
-                            
-                        </td>
-                        <td>
-                            <form action="/deteleDevice" method="get">
-                                <input type="hidden" value={{ $device->id }} name="delete-id">
-                                <button class="btn btn-primary me-1">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            <div class="modal fade" id="myModal" role="dialog">
-                @include('dialog._editForm',['device' => $device])
-            </div>
+            @if($devices->count() < 1) <p class="text-center ">There is no device to display</p>
+
+                @else
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="table-secondary">
+                            <th data-width="100" scope="col">Device Name</th>
+                            <th data-width="800" scope="col">Brand</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($devices as $device)
+                        <tr class="table-secondary">
+                            <td data-width="100">{{ $device->name }}</td>
+                            <td data-width="800">{{ $device->brand->name }}</td>
+                            <td>
+                                <form action="/editDevice" method="get">
+                                    <input type="hidden" value={{ $device->id }} name="id">
+                                    <input type="hidden" value={{ $device->brand->name }} name="brandName">
+                                    <button class="btn btn-primary me-1">Edit</button>
+                                </form>
+                                </button>
+                            </td>
+                            <td>
+                                <form action="/deteleDevice" method="get">
+                                    <input type="hidden" value={{ $device->id }} name="delete-id">
+                                    <button class="btn btn-primary me-1">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <div class="modal fade" id="myModal" role="dialog">
+                    @include('dialog._editForm',['device' => $device])
+                </div>
+
+                @endif
 
         </div>
     </div>

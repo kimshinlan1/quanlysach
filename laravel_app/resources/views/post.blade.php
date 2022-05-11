@@ -19,7 +19,7 @@
                     </div>
 
                     <div class="col-span-8">
-                        <div class="hidden lg:flex justify-between mb-6">
+                        <div class="lg:flex justify-between mb-6">
                             <a href="/" class="transition-colors duration-300 relative inline-flex items-center text-lg hover:text-blue-500">
                                 <svg width="22" height="22" viewBox="0 0 22 22" class="mr-2">
                                     <g fill="none" fill-rule="evenodd">
@@ -52,30 +52,6 @@
                     </div>
                 </article>
             </main>
-
-            <footer class="bg-gray-100 border border-black border-opacity-5 rounded-xl text-center py-16 px-10 mt-16">
-                <img src="/images/lary-newsletter-icon.svg" alt="" class="mx-auto -mb-6" style="width: 145px;">
-                <h5 class="text-3xl">Stay in touch with the latest posts</h5>
-                <p class="text-sm">Promise to keep the inbox clean. No bugs.</p>
-
-                <div class="mt-10">
-                    <div class="relative inline-block mx-auto lg:bg-gray-200 rounded-full">
-                        <form method="POST" action="#" class="lg:flex text-sm">
-                            <div class="lg:py-3 lg:px-5 flex items-center">
-                                <label for="email" class="hidden lg:inline-block">
-                                    <img src="/images/mailbox-icon.svg" alt="mailbox letter">
-                                </label>
-
-                                <input id="email" type="text" placeholder="Your email address" class="lg:bg-transparent pl-4 focus-within:outline-none">
-                            </div>
-
-                            <button type="submit" class="transition-colors duration-300 bg-blue-500 hover:bg-blue-600 mt-4 lg:mt-0 lg:ml-3 rounded-full text-xs font-semibold text-white uppercase py-3 px-8">
-                                Subscribe
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </footer>
         </section>
 
 </x-layout>
