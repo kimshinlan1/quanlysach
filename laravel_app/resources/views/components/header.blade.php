@@ -1,7 +1,7 @@
 @props(['categories'])
 <header class="max-w-xl mx-auto mt-20 text-center">
     <h1 class="text-4xl">
-        Latest <span class="text-blue-500">Laravel From Scratch</span> News
+        Latest <span class="text-blue-500">Laravel Feature</span> News
     </h1>
 
     <h2 class="inline-flex mt-2">By Lary Laracore <img src="/images/lary-head.svg" alt="Head of Lary the mascot"></h2>
