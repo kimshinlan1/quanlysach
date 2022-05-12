@@ -15,4 +15,7 @@
         <p class="text-center">No posts yet. Please check back</p>
         @endif
     </main>
+    <div>
+        <p>some text</p>
+    </div>
 </x-layout>
