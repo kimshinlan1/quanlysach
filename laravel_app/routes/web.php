@@ -7,6 +7,8 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\EditDeviceController;
 use App\Http\Controllers\DeleteDeviceController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\LogoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,4 +32,7 @@ Route::post('/register', [RegisterController::class, 'store']);
 Route::get('/posts/{post:id}', [PostController::class, 'show']);
 Route::get('/categories/{category:slug}', [CategoryController::class, 'list']);
 Route::get('/authors/{user:username}', [AuthorController::class, 'show']);
+Route::get('/logout', [LogoutController::class, 'signOut']);
+Route::get('/login', [LoginController::class, 'signInForm']);
+Route::post('/login', [LoginController::class, 'signIn']);
 
