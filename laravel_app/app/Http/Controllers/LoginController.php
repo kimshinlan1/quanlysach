@@ -14,13 +14,17 @@ class LoginController extends Controller
     }
 
     public function signIn(Request $request) {
-        $att = $request->validate([
+        $credentials = $request->validate([
             'username' => 'required | exists:users,username',
             'password' => 'required',
         ]);
-        if(Auth::attempt($att)) {
+        if(Auth::attempt($credentials)) {
+            $request->session()->regenerate();
             return Redirect('/')->with('success', 'Welcome to us');
         }
+        return back()->withErrors([
+            'username' => 'Your username or password cound be incorrect. Please try again.',
+        ]);
 
         return Redirect('/');
     } 
