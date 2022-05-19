@@ -19,7 +19,7 @@ class DeviceFactory extends Factory
     {
         return [
             'brand_id' => Brand::Factory(),
-            'name' => $this->faker->name,
+            'name' => $this->faker->name(),
         ];
     }
 }

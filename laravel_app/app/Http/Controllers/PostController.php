@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Models\Category;
+use App\Models\Comment;
 
 class PostController extends Controller
 {
@@ -13,7 +14,8 @@ class PostController extends Controller
         $post = Post::latest()->filter(request(['search']))->get();
         return view('posts', [
             'posts' => $post,
-            'categories' => $categories
+            'categories' => $categories,
+            'comments' => Comment::all()
         ]);
     }
 

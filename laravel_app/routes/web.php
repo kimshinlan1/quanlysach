@@ -9,6 +9,8 @@ use App\Http\Controllers\EditDeviceController;
 use App\Http\Controllers\DeleteDeviceController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\CommentController;
+use App\Models\Comment;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,4 +37,5 @@ Route::get('/authors/{user:username}', [AuthorController::class, 'show']);
 Route::get('/logout', [LogoutController::class, 'signOut']);
 Route::get('/login', [LoginController::class, 'signInForm']);
 Route::post('/login', [LoginController::class, 'signIn']);
+Route::get('/posts/{post}/comment', [CommentController::class, 'postComment']);
 

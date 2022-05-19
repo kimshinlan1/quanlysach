@@ -19,9 +19,13 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function scopeFilter($query, array $f)
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
+    
+    public function scopeFilter($query, array $filter)
     {
-        if ($f['search'] ?? false) {
+        if ($filter['search'] ?? false) {
             $query->where('title', 'like', '%' . request('search') . '%')
                 ->orWhere('body', 'like', '%' . request('search') . '%');
         }

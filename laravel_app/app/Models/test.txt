@@ -1,5 +1,0 @@
-This file is used to test branching in git
-Changed on main
-Modify 2nd
-123
-Changed on new-branch again
