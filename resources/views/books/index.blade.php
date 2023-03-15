@@ -5,90 +5,21 @@
 @section('content')
 
     {{-- {{dd($data['books'])}} --}}
+    <div class="tool_buttons d-flex justify-content-between">
 
-        {{-- <div class="row">
-            <div class="col_single col-sm-6">
-              <div class="card">
-                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                    <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/111.webp" class="img-fluid"/>
-                    <a href="#!">
-                      <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
-                    </a>
-                  </div>
-                <div class="card-body">
-                  <h5 class="card-title">Special title treatment</h5>
-                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                  <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-              </div>
-            </div>
-            <div class="col_single col-sm-6">
-              <div class="card">
-                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                    <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/111.webp" class="img-fluid"/>
-                    <a href="#!">
-                      <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
-                    </a>
-                  </div>
-                <div class="card-body">
-                  <h5 class="card-title">Special title treatment</h5>
-                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                  <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-              </div>
-            </div>
-            <div class="col_single col-sm-6">
-              <div class="card">
-                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                    <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/111.webp" class="img-fluid"/>
-                    <a href="#!">
-                      <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
-                    </a>
-                  </div>
-                <div class="card-body">
-                  <h5 class="card-title">Special title treatment</h5>
-                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                  <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="col_single col-sm-6">
-              <div class="card">
-                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                    <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/111.webp" class="img-fluid"/>
-                    <a href="#!">
-                      <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
-                    </a>
-                  </div>
-                <div class="card-body">
-                  <h5 class="card-title">Special title treatment</h5>
-                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                  <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-              </div>
-            </div>
-      
-            <div class="col_single col-sm-6">
-              <div class="card">
-                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                    <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/111.webp" class="img-fluid"/>
-                    <a href="#!">
-                      <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
-                    </a>
-                  </div>
-                <div class="card-body">
-                  <h5 class="card-title">Special title treatment</h5>
-                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                  <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> --}}
         <div class="insert-btn text-center">
-          <a href="{{route('book.create')}}" class="btn btn-success m-2">THÊM SÁCH</a>
+          <a href="{{route('book.create')}}" class="btn btn-primary m-2" data-toggle="modal" data-target="#uploadModal">Import CSV</a>
         </div>
+
+        <div class="insert-btn text-center">
+    
+          <a href="{{route('book.create')}}" class="btn btn-secondary m-2">Export CSV</a>
+        </div>
+
+        <div class="insert-btn text-center">
+          <a href="{{route('book.create')}}" class="btn btn-success m-2">Insert Books</a>
+        </div>
+      </div>
         
         @if (Session::get('success'))
           <p class="alert alert-success">{{Session::get('success')}}</p>
@@ -102,6 +33,7 @@
               <th>Tác giả</th>
               <th>Nhà xuất bản</th>
               <th>Danh mục</th>
+              <th>Hình</th>
               <th>Nội dung</th>
               <th>Số lượng</th>
               <th width="280px">Action</th>
@@ -115,6 +47,7 @@
               <td>{{ $book->tacgia}}</td>
               <td>{{ $book->nhaxuatban}}</td>
               <td>{{ $book->danhmuc}}</td>
+              <td >@if($book->hinh) <img src="{{asset('/uploads/images/' . $book->hinh)}}" alt="">@endif</td>
               <td>{{ $book->noidungsach}}</td>
               <td>{{ $book->soluong}}</td>
               <td>
@@ -128,9 +61,36 @@
             </tr>
             @endforeach
            
-          </table/>
+          </table>
           <div class="pagination">
             {{$books->links()}}
         </div>
+
+        <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <form method="POST" id="upload-csv-form" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header">
+                  <h5 class="modal-title" id="uploadModalLabel">Upload CSV file</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label for="csv_file">Select a CSV file:</label>
+                    <input type="file" class="form-control-file" id="csv_file" name="csv_file">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Upload</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
 @endsection
 

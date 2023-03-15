@@ -34,4 +34,8 @@ Route::middleware('auth')->group(function(){
 
     Route::resource('book', BookController::class);
     Route::resource('category', CategoryController::class);
+
+    // Import file csv
+    Route::get('/import', 'HomeController@showImportView')->name('import');
+    Route::post('/import', 'HomeController@importCSVHandler')->name('import');
 });

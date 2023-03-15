@@ -3,24 +3,21 @@ $(function(){
     // insert
     $('#insert-form').submit((e)=>{
         e.preventDefault();
+
+        let formData = new FormData(document.getElementById("insert-form"));
         $.ajax({
             url: "/book/storeAjax",
             type: "POST",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            data: {
-                _token: $('meta[name="csrf-token"]').attr('content'),
-                tensach: $("#ten_sach").val(),
-                mota: $("#mo_ta").val(),
-                soluong: $("#so_luong").val(),
-                tacgia: $("#tac_gia").val(),
-                nhaxuatban: $("#nha_xuat_ban").val(),
-                danhmuc: $("#danh_muc").val(),
-                noidungsach: $("#noi_dung_sach").val()
-            },
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false, // Add processData option to prevent jQuery from processing the form data
             success: function (response) {
                 if(response.success){
+                    alert('Thêm thành công');
                     window.location.href = response.redirect;
                 }
                 
@@ -105,6 +102,35 @@ $(function(){
             });
         }, 500);
         
+    });
+
+    // when user click import csv
+    $("#uploadModal").on("show.bs.modal", function(){
+        $("#csv_file").focus();
+    });
+
+    $('#upload-csv-form').submit(function(e){
+        e.preventDefault();
+        let formData = new FormData(document.getElementById("upload-csv-form"));
+        $.ajax({
+            method: "POST",
+            url: "/import",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false, // Add processData option to prevent jQuery from processing the form data
+            success: function (response) {
+                if(response.success){
+                    alert(response.success);
+                    window.location.href = response.redirect;
+                }
+                
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                alert("Error: " + error);
+            }
+        });
     });
 
 });

@@ -14,9 +14,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
-        // $books = $categoryWithId->books->toArray();
-        return view('categories.index')->with(['categories'=> $categories]);
+        $categoryWithbooks = Category::with('books')->get()->toArray();
+        return view('categories.index', compact('categoryWithbooks'));
     }
 
     /**
@@ -26,7 +25,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('categories.create');
     }
 
     /**
@@ -37,7 +36,14 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'tendanhmuc'=>'required|string'
+        ]);
+        $category = new Category();
+        $category->tendanhmuc = $validatedData['tendanhmuc'];
+        $category->save();
+
+        return redirect()->route('category.index')->with("insert_cate_success", "Thêm danh mục thành công");
     }
 
     /**
@@ -59,7 +65,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view('categories.edit', compact('category'));
     }
 
     /**
@@ -71,7 +77,11 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        // get cate by id
+        $categoryById = Category::find($category->id);
+        $categoryById->tendanhmuc = $request->tendanhmuc;
+        $categoryById->save();
+        return redirect()->route("category.index")->with("cate_success_update","Cập nhật dữ liệu thành công");
     }
 
     /**
@@ -82,6 +92,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return redirect()->route("category.index")->with("delete_success", "Xóa thành công");
     }
 }

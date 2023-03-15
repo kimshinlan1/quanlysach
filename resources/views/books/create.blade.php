@@ -3,7 +3,7 @@
 @section("title", "Thêm sách")
 
 @section('content')
-      <form id="insert-form">
+      <form id="insert-form" method="POST" enctype="multipart/form-data">
         @csrf
             <div class="form-group">
               <label for="tensach">Tên sách</label>
@@ -26,9 +26,23 @@
               <input type="text" class="form-control" id="nha_xuat_ban" name="nhaxuatban" aria-describedby="nha_xuat_ban" placeholder="Nhập tên nhà xuất bản">
             </div>
             <div class="form-group">
-              <label for="danhmuc">Danh mục</label>
-              <input type="number" class="form-control" id="danh_muc" name="danhmuc" aria-describedby="danh_muc" placeholder="Nhập tên danh mục">
+              <label for="nhaxuatban">Chọn danh mục</label>
+              <select name="danhmuc" class="form-control" id= "danh_muc">
+                  @foreach ($danhmuc as $item)
+                    <option value="{{$item->id}}">{{$item->tendanhmuc}}</option>
+                  @endforeach
+                </select>
             </div>
+            <div class="form-group">
+                <label for="image">Chọn hình</label>
+                <input type="file" id="image" name="image">
+            </div>
+            
+            <div class="form-group">
+                <label for="image">Upload files</label>
+                <input type="file" id="files" name="files[]" multiple>
+            </div>
+            
             <div class="form-group">
               <label for="tensach">Nội dung sách</label>
               <input type="text" class="form-control" id="noi_dung_sach" name="noidungsach" aria-describedby="noi_dung_sach" placeholder="Nhập nội dung sách">

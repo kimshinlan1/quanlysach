@@ -24,7 +24,44 @@
 <body>
     <div class="container wrapper">
         <div class="header">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            {{-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                
+            </nav> --}}
+            <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+                <div class="banner-image">
+                    <img src="{{asset('images/banner.jpg')}}" alt="Hình banner">
+                </div>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                  <ul class="navbar-nav">
+            
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{{route('book.index')}}">Sách <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{{route('category.index')}}">Danh mục sách</a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="form-search">
+                    <form class="form-inline my-2 my-lg-0 " id = "search-frm" method="GET">
+                        @csrf
+                        <input type="text" class="form-control" name="search" id="search-input" placeholder="Tìm kiếm...">
+                  </form>
+                  <div id="search-result">
+                    <ul class="search-results-table">
+                        <li>1</li>
+                        <li>2</li>
+                        <li>3</li>
+                    </ul>
+                  </div>
+                </div>
+
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -52,7 +89,7 @@
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
-            
+                                
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="#">Profile</a>
                                     <div class="dropdown-divider"></div>
@@ -70,9 +107,10 @@
                         @endguest
                     </ul>
                 </div>
-            </nav>
+
+              </nav>
         </div>
-        <div class="main">
+        <div class="main mt-2">
             @yield('content')
         </div>
     </div>

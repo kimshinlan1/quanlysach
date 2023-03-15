@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Book;
+use App\Category;
+use App\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\VarDumper\Cloner\Data;
 
 class BookController extends Controller
 {
@@ -15,15 +19,9 @@ class BookController extends Controller
      */
     public function index()
     {
-        //
-        //  echo "<pre>";
-       /* $data = Book::all();
-        var_dump($data->toArray());*/
-        $books = DB::table('books')->paginate(5);
-        
+        $books = DB::table('books')->orderBy('created_at','desc')->paginate(5);
+
         return view("books.index")->with('books', $books);
-        
-        
     }
 
     /**
@@ -33,8 +31,8 @@ class BookController extends Controller
      */
     public function create()
     {
-        // 
-        return view('books.create');
+        $danhmuc = Category::all();
+        return view('books.create', compact('danhmuc'));
     }
 
     /**
@@ -45,57 +43,70 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        // validate form data
-        $validatedData = $request->validate([
-            'ten'=>'required|string',
-            'mota' => 'required|string|max:255',
-            'soluong' => 'required|integer|max:50',
-            'tacgia' =>'required',
-            'nhaxuatban' => 'required',
-            'danhmuc' => 'required',
-            'noidungsach' => 'required',
-        ]);
-
-
-        $book = new Book;
-        $book->ten = $validatedData["ten"];
-        $book->mota = $validatedData["mota"];
-        $book->soluong = $validatedData["soluong"];
-        $book->tacgia = $validatedData["tacgia"];
-        $book->nhaxuatban = $validatedData["nhaxuatban"];
-        $book->danhmuc = $validatedData["danhmuc"];
-        $book->noidungsach = $validatedData["noidungsach"];
-
-        // save data to database
-        $book->save();
-        return response()->json(['success'=>true,'redirect'=>route('book.index')]);
+       //
     }
 
-    public function storeByAjax(Request $request){
+    public function storeByAjax(Request $request)
+    {
+        $book = new Book;
         // validate form data
         $validatedData = $request->validate([
-            'tensach'=>'required|string',
+            'tensach' => 'required|string',
             'mota' => 'required|string|max:255',
             'soluong' => 'required|integer|max:50',
-            'tacgia' =>'required',
+            'tacgia' => 'required',
             'nhaxuatban' => 'required',
             'danhmuc' => 'required',
             'noidungsach' => 'required',
+            'image' => 'required|image|max:2048'
         ]);
 
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $name = time() . '.' . $image->getClientOriginalExtension();
+            $destinationPath = public_path('/uploads/images');
+            $image->move($destinationPath, $name);
+            $book->hinh = $name;
+        }
 
-        $book = new Book;
         $book->ten = $validatedData["tensach"];
         $book->mota = $validatedData["mota"];
         $book->soluong = $validatedData["soluong"];
         $book->tacgia = $validatedData["tacgia"];
         $book->nhaxuatban = $validatedData["nhaxuatban"];
         $book->danhmuc = $validatedData["danhmuc"];
+        $book->hinh = $validatedData["image"];
         $book->noidungsach = $validatedData["noidungsach"];
 
         // save data to database
         $book->save();
-        return response()->json(['success'=>true,'redirect'=>route('book.index')]);
+        
+        // Get the files from the request
+        $files = $request->file('files');
+        // Loop through each file and upload it
+        foreach ($files as $file) {
+            // Generate a unique filename for the file
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $destinationFilesPath = public_path('/uploads/images');
+            $file->move($destinationFilesPath, $filename);
+
+            $fileModel = new File();
+            $fileModel->filename = $filename;
+            $fileModel->filepath = 'uploads/images/' . $filename;
+            $fileModel->filetype = $file->getClientMimeType();
+            $fileModel->book_id = $book->id;
+            $fileModel->save();
+        }
+
+        // Write log when user create new book
+        try {
+            Log::channel('my_log')->info("User created a new book", ["user_id"=>auth()->user()->id, "book_id"=>$book->id]);
+        } catch(\Exception $e) {
+            echo $e->getMessage();
+        }
+
+         return response()->json(['success' => true, 'redirect' => route('book.index')]);
     }
 
     /**
@@ -107,7 +118,7 @@ class BookController extends Controller
     public function show(Book $book)
     {
         //
-        
+
     }
 
     /**
@@ -117,7 +128,7 @@ class BookController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(Book $book)
-    {   
+    {
         //
         return view('books.edit', compact("book"));
     }
@@ -139,11 +150,19 @@ class BookController extends Controller
         $bookById->tacgia = $request->tacgia;
         $bookById->nhaxuatban = $request->nhaxuatban;
         $bookById->danhmuc = $request->danhmuc;
-        $bookById->noidungsach = $request->noidungsach; 
+        $bookById->noidungsach = $request->noidungsach;
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $name = time() . '.' . $image->getClientOriginalExtension();
+            $destinationPath = public_path('/uploads/images');
+            $image->move($destinationPath, $name);
+            $bookById->hinh = $name;
+        }
 
         $bookById->save();
-        return redirect()->route("book.index")->with("success","Cập nhật dữ liệu thành công");
-
+        return redirect()->route("book.index")->with("success", "Cập nhật dữ liệu thành công");
     }
 
     /**
@@ -158,16 +177,23 @@ class BookController extends Controller
         $book->delete();
         return redirect()->route("book.index")->with("success", "Xóa thành công");
     }
-    public function deleteByAjax($id){
+    public function deleteByAjax($id)
+    {
         $rowById = Book::find($id);
         // Check if the row exist
-        if(!$rowById) 
-            return response()->json([ "success"=> false ]);
+        if (!$rowById)
+            return response()->json(["success" => false]);
 
         // delete row
         $rowById->delete();
 
-        return response() -> json(["success"=>true]);
+        try {
+            Log::channel('my_log')->warning("User deleted a book", ["user_id"=>auth()->user()->id, "book_id"=>$id]);
+        } catch(\Exception $e) {
+            echo $e->getMessage();
+        }
+
+        return response()->json(["success" => true]);
     }
 }
 // Writing The Validation Logic in Request object in laravel

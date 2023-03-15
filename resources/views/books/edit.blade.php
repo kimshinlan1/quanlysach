@@ -3,7 +3,7 @@
 @section('title', 'Sửa sách')
 
 @section('content')
-    <form action="{{route('book.update', $book->id)}}" method="POST">
+    <form action="{{route('book.update', $book->id)}}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="form-group">
@@ -29,6 +29,11 @@
           <div class="form-group">
             <label for="danhmuc">Danh mục</label>
             <input type="number" class="form-control" value="{{$book->danhmuc}}" id="danh_muc" name="danhmuc" aria-describedby="danh_muc" placeholder="Nhập tên danh mục">
+          </div>
+          <div class="form-group">
+            <label for="image">Upload hình</label>
+            @if($book->hinh) <img src="{{asset('/uploads/images/' . $book->hinh)}}" alt="">@endif
+            <input type="file" name="image">
           </div>
           <div class="form-group">
             <label for="tensach">Nội dung sách</label>
