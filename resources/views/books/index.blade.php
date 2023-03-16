@@ -8,12 +8,12 @@
     <div class="tool_buttons d-flex justify-content-between">
 
         <div class="insert-btn text-center">
-          <a href="{{route('book.create')}}" class="btn btn-primary m-2" data-toggle="modal" data-target="#uploadModal">Import CSV</a>
+          <a href="#" class="btn btn-primary m-2" data-toggle="modal" data-target="#uploadModal">Import CSV</a>
         </div>
 
         <div class="insert-btn text-center">
     
-          <a href="{{route('book.create')}}" class="btn btn-secondary m-2">Export CSV</a>
+          <a href="{{route('export')}}" class="btn btn-secondary m-2">Export CSV</a>
         </div>
 
         <div class="insert-btn text-center">
@@ -46,7 +46,7 @@
               <td>{{ $book->soluong}}</td>
               <td>{{ $book->tacgia}}</td>
               <td>{{ $book->nhaxuatban}}</td>
-              <td>{{ $book->danhmuc}}</td>
+              <td>@if($book->category) {{ $book->category->tendanhmuc}} @endif</td>
               <td >@if($book->hinh) <img src="{{asset('/uploads/images/' . $book->hinh)}}" alt="">@endif</td>
               <td>{{ $book->noidungsach}}</td>
               <td>{{ $book->soluong}}</td>

@@ -3,7 +3,8 @@
 @section('title', 'Sửa sách')
 
 @section('content')
-    <form action="{{route('book.update', $book->id)}}" method="POST" enctype="multipart/form-data">
+    {{-- {{dd($danhmuc)}} --}}
+    <form class="book-form" action="{{route('book.update', $book->id)}}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="form-group">
@@ -27,8 +28,12 @@
             <input type="text" class="form-control" value="{{$book->nhaxuatban}}" id="nha_xuat_ban" name="nhaxuatban" aria-describedby="nha_xuat_ban" placeholder="Nhập tên nhà xuất bản">
           </div>
           <div class="form-group">
-            <label for="danhmuc">Danh mục</label>
-            <input type="number" class="form-control" value="{{$book->danhmuc}}" id="danh_muc" name="danhmuc" aria-describedby="danh_muc" placeholder="Nhập tên danh mục">
+            <label for="nhaxuatban">Chọn danh mục</label>
+            <select name="danhmuc" class="form-control" id= "danh_muc">
+                @foreach ($categories as $category)
+                  <option @if($category->id == $book->danhmuc) selected @endif  value="{{$category->id}}">{{$category->tendanhmuc}}</option>
+                @endforeach
+              </select>
           </div>
           <div class="form-group">
             <label for="image">Upload hình</label>

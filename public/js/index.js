@@ -1,7 +1,6 @@
-$(function(){
-
+$(function () {
     // insert
-    $('#insert-form').submit((e)=>{
+    $('#insert-form').submit((e) => {
         e.preventDefault();
 
         let formData = new FormData(document.getElementById("insert-form"));
@@ -16,11 +15,11 @@ $(function(){
             contentType: false,
             processData: false, // Add processData option to prevent jQuery from processing the form data
             success: function (response) {
-                if(response.success){
+                if (response.success) {
                     alert('Thêm thành công');
                     window.location.href = response.redirect;
                 }
-                
+
             },
             error: function (xhr, status, error) {
                 console.log(xhr.responseText);
@@ -31,31 +30,32 @@ $(function(){
     });
 
     // delete row
-    $('.btn-delete').click(((e)=>{
+    $('.btn-delete').click(((e) => {
         e.preventDefault();
         let id = $(e.target).data("id");
         let row = $(e.target).closest("tr");
         let token = $("meta[name = 'csrf-token']").attr("content");
-        if(confirm("Bạn có chắc chắn muốn xóa dòng này không ?")){
+        if (confirm("Bạn có chắc chắn muốn xóa dòng này không ?")) {
             $.ajax({
                 url: "/delete/" + id,
                 type: "DELETE",
                 data: {
                     _token: token
                 },
-                success: function(response){
+                success: function (response) {
                     console.log(response)
-                    if(response.success){
+                    if (response.success) {
                         row.remove();
+                        alert("Xóa thành công");
                     }
-                    else{
+                    else {
                         alert("Không thể xóa dữ liệu");
                     }
                 },
-                error: function(error){
-                    alert("Error: "+ error);
+                error: function (error) {
+                    alert("Error: " + error);
                 }
-            
+
             });
         }
     }));
@@ -63,13 +63,13 @@ $(function(){
     // Search data
     let searchResults = $("#search-result");
     searchResults.hide();
-    $("#search-input").on("input", (e)=>{
+    $("#search-input").on("input", (e) => {
         e.preventDefault();
         let searchTimeout;
         clearTimeout(searchTimeout);
 
         // Set a timeout to delay the AJAX request
-        searchTimeout = setTimeout(function(){
+        searchTimeout = setTimeout(function () {
             var search_value = $(e.currentTarget).val();
             $.ajax({
                 url: "/search",
@@ -77,39 +77,47 @@ $(function(){
                 data: {
                     search_value: search_value
                 },
-                success: function(response){
+                success: function (response) {
                     searchResults.empty();
                     searchResults.fadeIn(500);
-                    if(response.length < 0){
+                    if (response.length < 0) {
                         searchResults.append($("<div>Không tìm thấy kết quả</div>"));
-                    }else if(response.length == 0){
+                    } else if (response.length == 0) {
                         searchResults.hide();
                     }
-                    else{
-                        let list = $('<ul></ul>');
-                        for(let i = 0; i < response.length; i++){
+                    else {
+
+                        let list = $('<ul class="search_results_table"></ul>');
+                        for (let i = 0; i < response.length; i++) {
                             let item = $("<li></li>");
-                            item.text(response[i].ten);
+                            // use the URL in your JavaScript code
+                            let imageUrl = imagesPath + '/' + response[i].hinh;
+                            // Create image element
+                            let img = $('<img>').attr({ 'src': imageUrl, 'alt': 'Hình' });
+                            // Create image element
+                            let span = $('<span></span>').text(response[i].ten);
+                            item.append(img);
+                            item.append(span);
                             list.append(item);
                         }
                         searchResults.append(list);
                     }
-                    
+
                 },
-                error: function(error){
+                error: function (error) {
                     alert('Error:' + error);
                 }
             });
         }, 500);
-        
+
     });
 
     // when user click import csv
-    $("#uploadModal").on("show.bs.modal", function(){
+    $("#uploadModal").on("show.bs.modal", function () {
         $("#csv_file").focus();
     });
 
-    $('#upload-csv-form').submit(function(e){
+    $('#upload-csv-form').submit(function (e) {
         e.preventDefault();
         let formData = new FormData(document.getElementById("upload-csv-form"));
         $.ajax({
@@ -120,11 +128,11 @@ $(function(){
             contentType: false,
             processData: false, // Add processData option to prevent jQuery from processing the form data
             success: function (response) {
-                if(response.success){
+                if (response.success) {
                     alert(response.success);
                     window.location.href = response.redirect;
                 }
-                
+
             },
             error: function (xhr, status, error) {
                 console.log(xhr.responseText);

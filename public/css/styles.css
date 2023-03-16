@@ -42,6 +42,21 @@ table {
 	border-spacing: 0;
 }
 
+.login-form-container {
+    max-width: 500px;
+    margin: auto;
+}
+
+input.btn-login{
+	display: block;
+	margin: auto;
+}
+
+.login-form label, 
+.book-form label{
+	margin-bottom: .5rem;
+}
+
 .form-search{
 	position: relative;
 	background-color: white;
@@ -61,15 +76,22 @@ table {
 }
 
 .form-search ul>li{
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	padding: 10px;
 	border-bottom: 1px solid;
+}
+
+.form-search ul>li img{
+	margin-right: 5px;;
 }
 
 .form-search ul>li:last-child{
 	border: none;
 }
 
-.header .navbar .banner-image, table img, .form-group img {
+.header .navbar .banner-image, table img, .form-group img, #search-result .search_results_table img {
 	width: 80px;
 	height: 60px;
 }

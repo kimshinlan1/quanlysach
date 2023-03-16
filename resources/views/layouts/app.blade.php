@@ -19,6 +19,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js" defer></script> 
 
     <!-- my js file -->
+    <script> var imagesPath = "{{ asset('uploads/images//') }}"; </script>
     <script src="{{ asset('js/index.js') }}" defer></script>
 </head>
 <body>
@@ -54,11 +55,7 @@
                         <input type="text" class="form-control" name="search" id="search-input" placeholder="Tìm kiếm...">
                   </form>
                   <div id="search-result">
-                    <ul class="search-results-table">
-                        <li>1</li>
-                        <li>2</li>
-                        <li>3</li>
-                    </ul>
+                    
                   </div>
                 </div>
 

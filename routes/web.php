@@ -21,7 +21,7 @@ Route::post('/logout', 'AuthController@logout')->name('logout');
 
 Route::middleware('auth')->group(function(){
     Route::get('/', function(){
-    return redirect()->route('home');
+    return redirect()->route('book.index');
     });
     Route::get('home', function(){
     return view('home');
@@ -38,4 +38,5 @@ Route::middleware('auth')->group(function(){
     // Import file csv
     Route::get('/import', 'HomeController@showImportView')->name('import');
     Route::post('/import', 'HomeController@importCSVHandler')->name('import');
+    Route::get('/export', 'HomeController@exportCSVHandler')->name('export');
 });

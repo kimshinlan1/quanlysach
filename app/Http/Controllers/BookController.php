@@ -19,8 +19,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = DB::table('books')->orderBy('created_at','desc')->paginate(5);
-
+        $books = Book::with('category')->orderBy('created_at', 'desc')->paginate(5);
         return view("books.index")->with('books', $books);
     }
 
@@ -43,7 +42,7 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-       //
+        //
     }
 
     public function storeByAjax(Request $request)
@@ -81,32 +80,36 @@ class BookController extends Controller
 
         // save data to database
         $book->save();
-        
-        // Get the files from the request
-        $files = $request->file('files');
-        // Loop through each file and upload it
-        foreach ($files as $file) {
-            // Generate a unique filename for the file
-            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-            $destinationFilesPath = public_path('/uploads/images');
-            $file->move($destinationFilesPath, $filename);
 
-            $fileModel = new File();
-            $fileModel->filename = $filename;
-            $fileModel->filepath = 'uploads/images/' . $filename;
-            $fileModel->filetype = $file->getClientMimeType();
-            $fileModel->book_id = $book->id;
-            $fileModel->save();
+        // Get the files from the request
+        if ($request->hasFile('files')) {
+            $files = $request->file('files');
+        }
+        // Loop through each file and upload it
+        if (isset($files) && is_iterable($files)) {
+            foreach ($files as $file) {
+                // Generate a unique filename for the file
+                $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+                $destinationFilesPath = public_path('/uploads/images');
+                $file->move($destinationFilesPath, $filename);
+
+                $fileModel = new File();
+                $fileModel->filename = $filename;
+                $fileModel->filepath = 'uploads/images/' . $filename;
+                $fileModel->filetype = $file->getClientMimeType();
+                $fileModel->book_id = $book->id;
+                $fileModel->save();
+            }
         }
 
         // Write log when user create new book
         try {
-            Log::channel('my_log')->info("User created a new book", ["user_id"=>auth()->user()->id, "book_id"=>$book->id]);
-        } catch(\Exception $e) {
+            Log::channel('my_log')->info("User created a new book", ["user_id" => auth()->user()->id, "book_id" => $book->id]);
+        } catch (\Exception $e) {
             echo $e->getMessage();
         }
 
-         return response()->json(['success' => true, 'redirect' => route('book.index')]);
+        return response()->json(['success' => true, 'redirect' => route('book.index')]);
     }
 
     /**
@@ -129,8 +132,13 @@ class BookController extends Controller
      */
     public function edit(Book $book)
     {
-        //
-        return view('books.edit', compact("book"));
+        // iddanhmuc -> tendanhmuc ($book->danhmuc)
+        // lay danh muc theo id book
+        $categories = Category::all();
+
+        // echo "<pre>";
+        //  $danhmuc = Category::find($book->danhmuc) ? Category::find($book->danhmuc) : $book->danhmuc;
+        return view('books.edit', compact("book", "categories"));
     }
 
     /**
@@ -143,6 +151,7 @@ class BookController extends Controller
     public function update(Request $request, $id)
     {
         // get book by id
+
         $bookById = Book::find($id);
         $bookById->ten = $request->tensach;
         $bookById->mota = $request->mota;
@@ -188,8 +197,8 @@ class BookController extends Controller
         $rowById->delete();
 
         try {
-            Log::channel('my_log')->warning("User deleted a book", ["user_id"=>auth()->user()->id, "book_id"=>$id]);
-        } catch(\Exception $e) {
+            Log::channel('my_log')->warning("User deleted a book", ["user_id" => auth()->user()->id, "book_id" => $id]);
+        } catch (\Exception $e) {
             echo $e->getMessage();
         }
 
