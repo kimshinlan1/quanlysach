@@ -8,6 +8,7 @@ use App\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Symfony\Component\VarDumper\Cloner\Data;
 
 class BookController extends Controller
@@ -49,17 +50,26 @@ class BookController extends Controller
     {
         $book = new Book;
         // validate form data
-        $validatedData = $request->validate([
+        $validator = Validator::make($request->all(), [
             'tensach' => 'required|string',
             'mota' => 'required|string|max:255',
             'soluong' => 'required|integer|max:50',
             'tacgia' => 'required',
             'nhaxuatban' => 'required',
-            'danhmuc' => 'required',
-            'noidungsach' => 'required',
-            'image' => 'required|image|max:2048'
+            'image' => 'image|max:2048',
+        ], [
+            'tensach.required' => 'Vui lòng nhập tên sách',
+            'mota.required' => 'Vui lòng nhập mô tả',
+            'soluong.required' => 'Vui lòng nhập số lượng',
+            'tacgia.required' => 'Vui lòng nhập tác giả',
+            'nhaxuatban.required' => 'Vui lòng nhập nhà xuất bản',
+            'image.image' => 'Vui lòng chọn đúng định dạng ảnh',
+            'image.max' => 'Dung lượng ảnh không được vượt quá 2048 kilobytes.'
         ]);
-
+        if ($validator->fails()) {
+            return response()->json(["errors" => $validator->errors()]);
+        }
+  
         // Handle image upload
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -67,16 +77,18 @@ class BookController extends Controller
             $destinationPath = public_path('/uploads/images');
             $image->move($destinationPath, $name);
             $book->hinh = $name;
+        } else {
+            $book->hinh = null;
         }
 
-        $book->ten = $validatedData["tensach"];
-        $book->mota = $validatedData["mota"];
-        $book->soluong = $validatedData["soluong"];
-        $book->tacgia = $validatedData["tacgia"];
-        $book->nhaxuatban = $validatedData["nhaxuatban"];
-        $book->danhmuc = $validatedData["danhmuc"];
-        $book->hinh = $validatedData["image"];
-        $book->noidungsach = $validatedData["noidungsach"];
+        $book->ten = $validator->validated()["tensach"];
+        $book->mota = $validator->validated()["mota"];
+        $book->soluong = $validator->validated()["soluong"];
+        $book->tacgia = $validator->validated()["tacgia"];
+        $book->nhaxuatban = $validator->validated()["nhaxuatban"];
+        $book->danhmuc = $request->input("danhmuc");
+        
+        $book->noidungsach = $request->input("noidungsach");
 
         // save data to database
         $book->save();
@@ -150,6 +162,27 @@ class BookController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // validate form data
+        $validator = Validator::make($request->all(), [
+            'tensach' => 'required|string',
+            'mota' => 'required|string|max:255',
+            'soluong' => 'required|integer|max:50',
+            'tacgia' => 'required',
+            'nhaxuatban' => 'required',
+            'image' => 'image|max:2048',
+        ], [
+            'tensach.required' => 'Vui lòng nhập tên sách',
+            'mota.required' => 'Vui lòng nhập mô tả',
+            'soluong.required' => 'Vui lòng nhập số lượng',
+            'tacgia.required' => 'Vui lòng nhập tác giả',
+            'nhaxuatban.required' => 'Vui lòng nhập nhà xuất bản',
+            'image.image' => 'Vui lòng chọn đúng định dạng ảnh',
+            'image.max' => 'Dung lượng ảnh không được vượt quá 2048 kilobytes.'
+        ]);
+        if ($validator->fails()) {
+            return response()->json(["errors" => $validator->errors()]);
+        }
+        
         // get book by id
 
         $bookById = Book::find($id);

@@ -63,7 +63,7 @@
            
           </table>
           <div class="pagination">
-            {{$books->links()}}
+            {{$books->links('pagination::bootstrap-4')}}
         </div>
 
         <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
