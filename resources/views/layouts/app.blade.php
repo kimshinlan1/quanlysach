@@ -24,6 +24,8 @@
     <!-- Scripts -->
     <script src="{{ asset('assets/js/app.js') }}" defer></script>
 
+    <script src="//cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
@@ -101,6 +103,7 @@
             @yield('content')
         </main>
     </div>
+    @yield('scripts')
 </body>
 
 </html>

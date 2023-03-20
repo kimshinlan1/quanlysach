@@ -24,11 +24,24 @@ class BookController extends Controller
         return view("books.index")->with('books', $books);
     }
 
+    public function search(Request $request)
+    {
+        $search_txt = $request->get("search_value");
+        if (!empty($search_txt)) {
+            $search_result = Book::where("ten", "like", "%" . $search_txt . "%")->with('category')->get();
+            return response()->json($search_result);
+        } else {
+            return response()->json([]);
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
+
+     // Show view create new Books
     public function create()
     {
         $danhmuc = Category::all();
@@ -41,11 +54,8 @@ class BookController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
-    }
 
+     // Store data by Ajax
     public function storeByAjax(Request $request)
     {
         $book = new Book;
@@ -130,11 +140,6 @@ class BookController extends Controller
      * @param  \App\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function show(Book $book)
-    {
-        //
-
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -144,12 +149,7 @@ class BookController extends Controller
      */
     public function edit(Book $book)
     {
-        // iddanhmuc -> tendanhmuc ($book->danhmuc)
-        // lay danh muc theo id book
         $categories = Category::all();
-
-        // echo "<pre>";
-        //  $danhmuc = Category::find($book->danhmuc) ? Category::find($book->danhmuc) : $book->danhmuc;
         return view('books.edit', compact("book", "categories"));
     }
 
@@ -183,8 +183,7 @@ class BookController extends Controller
             return response()->json(["errors" => $validator->errors()]);
         }
         
-        // get book by id
-
+        // Get book by id
         $bookById = Book::find($id);
         $bookById->ten = $request->tensach;
         $bookById->mota = $request->mota;

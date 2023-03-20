@@ -77,7 +77,6 @@ input.btn-login{
 
 .form-search ul>li{
 	display: flex;
-	justify-content: center;
 	align-items: center;
 	padding: 10px;
 	border-bottom: 1px solid;
@@ -91,10 +90,16 @@ input.btn-login{
 	border: none;
 }
 
-.header .navbar .banner-image, table img, .form-group img, #search-result .search_results_table img {
+.header .navbar .banner-image, table img, .form-group img {
 	width: 80px;
 	height: 60px;
 	object-fit: cover;
+}
+#search-result .search_results_table img{
+	width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin-right: 10px;
 }
 .header .navbar .banner-image img{
 	width: 100%;

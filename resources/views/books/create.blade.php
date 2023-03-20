@@ -52,8 +52,9 @@
 
         <div class="form-group">
             <label for="tensach">Nội dung sách</label>
-            <input type="text" class="form-control" id="noi_dung_sach" name="noidungsach"
-                aria-describedby="noi_dung_sach" placeholder="Nhập nội dung sách">
+            {{-- <input type="text" class="form-control" id="noi_dung_sach" name="noidungsach"
+                aria-describedby="noi_dung_sach" placeholder="Nhập nội dung sách"> --}}
+            <textarea class="ckeditor form-control" id = "summary-ckeditor" name="summary-ckeditor"></textarea>
         </div>
         <button type="submit" class="btn btn-primary insert-btn-submit">Submit</button>
     </form>

@@ -11,17 +11,6 @@ use League\Csv\Writer;
 
 class HomeController extends Controller
 {
-    public function search(Request $request)
-    {
-        $search_txt = $request->get("search_value");
-        if (!empty($search_txt)) {
-            $search_result = Book::where("ten", "like", "%" . $search_txt . "%")->get();
-            return response()->json($search_result);
-        } else {
-            return response()->json([]);
-        }
-    }
-
     public function showImportView()
     {
         return view('import');

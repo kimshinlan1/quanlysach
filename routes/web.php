@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function(){
     // return view('home');
     });
     
-    Route::get('/search', 'HomeController@search')->name('search');
+    Route::get('/search', 'BookController@search')->name('search');
 
     Route::post('/book/storeAjax',"BookController@storeByAjax");
     Route::delete('/delete/{id}', 'BookController@deleteByAjax');
