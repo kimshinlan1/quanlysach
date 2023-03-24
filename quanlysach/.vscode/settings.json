@@ -1,0 +1,5 @@
+{
+    "phpCodeSniffer.standard": "PSR12",
+    "phpCodeSniffer.autoExecutable": true,
+    "phpCodeSniffer.executable": "C:/Users/UserName/AppData/Roaming/Composer/vendor/bin/phpcs.bat"
+}
