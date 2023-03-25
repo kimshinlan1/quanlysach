@@ -21,6 +21,7 @@ class BookController extends Controller
      */
     public function index()
     {
+        echo "hehe";
         $books = Book::with(['category','files'])->orderBy('created_at', 'desc')->paginate(5);
         return view("books.index")->with('books', $books);
     }
